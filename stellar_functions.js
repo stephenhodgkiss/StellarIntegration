@@ -41,7 +41,7 @@ function authLogin () {
 
 function getBalance (networkNumber) {
 
-	$("#errormsg").text("");
+	$("#errormsg").text("Something went wrong!");
 	$("#data_balances").text('');
 
 	var pubkey = $("#pubkey").val();
@@ -119,6 +119,7 @@ function doBalances (network,pubkey) {
 		})
   		.then(function(result) {
 		    // console.log('Success! Results:', result);
+				$("#errormsg").text("")
 		})
 		.catch(function(error) {
 			$("#errormsg").text('The destination account does not exist!');
@@ -131,7 +132,7 @@ function doBalances (network,pubkey) {
 
 function changeTrust (networkNumber) {
 
-	$("#errormsg").text("");
+	$("#errormsg").text("Something went wrong!");
 
 	var seckey = $("#seckey").val();
 
@@ -224,7 +225,7 @@ function doTrust (network,seckey) {
     return server.submitTransaction(transaction);
   })
   .then(function(result) {
-    console.log('Success! Results:', result);
+    // console.log('Success! Results:', result);
 		$("#errormsg").text('Success');
   })
   .catch(function(error) {
