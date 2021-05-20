@@ -41,7 +41,7 @@ function authLogin () {
 
 function getBalance (networkNumber) {
 
-	$("#errormsg").text("Something went wrong!");
+	$("#errormsg").text("Processing.....");
 	$("#data_balances").text('');
 
 	var pubkey = $("#pubkey").val();
@@ -132,7 +132,7 @@ function doBalances (network,pubkey) {
 
 function changeTrust (networkNumber) {
 
-	$("#errormsg").text("Something went wrong!");
+	$("#errormsg").text("Processing.....");
 
 	var seckey = $("#seckey").val();
 
