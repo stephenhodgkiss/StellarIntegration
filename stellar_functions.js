@@ -44,12 +44,12 @@ function getBalance (networkNumber) {
 	$("#errormsg").text("");
 	$("#data_balances").text('');
 
-	const pubkey = $("#pubkey").val();
+	var pubkey = $("#pubkey").val();
 
 	if (networkNumber == 1) {
-		const network = "public"
+		var network = "public"
 	} else {
-		const network = "testnet"
+		var network = "testnet"
 	}
 
 	//console.log("pubkey="+pubkey);
@@ -72,14 +72,14 @@ function getBalance (networkNumber) {
 
 function doBalances (network,pubkey) {
 
-	const pubKey1 = pubkey;
+	var pubKey1 = pubkey;
 
 	if (network == "public") {
-		const server = new StellarSdk.Server("https://horizon.stellar.org");
-		const networkName = StellarSdk.Networks.PUBLIC;
+		var server = new StellarSdk.Server("https://horizon.stellar.org");
+		var networkName = StellarSdk.Networks.PUBLIC;
 	} else {
-		const server = new StellarSdk.Server("https://horizon-testnet.stellar.org");
-		const networkName = StellarSdk.Networks.TESTNET;
+		var server = new StellarSdk.Server("https://horizon-testnet.stellar.org");
+		var networkName = StellarSdk.Networks.TESTNET;
 	}
 
 	// console.log('network='+network+' networkName='+networkName)
@@ -133,7 +133,7 @@ function changeTrust (networkNumber) {
 
 	$("#errormsg").text("");
 
-	const seckey = $("#seckey").val();
+	var seckey = $("#seckey").val();
 
 	if (networkNumber == 1) {
 		var network = "public"
@@ -163,18 +163,18 @@ function changeTrust (networkNumber) {
 
 function doTrust (network,seckey) {
 
-	const sourceKeys = StellarSdk.Keypair
+	var sourceKeys = StellarSdk.Keypair
 	  .fromSecret('SB67R6AQQTFSXD76H52BCFNQVGM6FUVXD675P5FGPDGI2UTGKYYWTY2C');
-	const receivingKeys = StellarSdk.Keypair
+	var receivingKeys = StellarSdk.Keypair
 	  .fromSecret(seckey);
-	const destinationId = receivingKeys.publicKey();
+	var destinationId = receivingKeys.publicKey();
 
 	if (network == "public") {
-		const server = new StellarSdk.Server("https://horizon.stellar.org");
-		const networkName = StellarSdk.Networks.PUBLIC;
+		var server = new StellarSdk.Server("https://horizon.stellar.org");
+		var networkName = StellarSdk.Networks.PUBLIC;
 	} else {
-		const server = new StellarSdk.Server("https://horizon-testnet.stellar.org");
-		const networkName = StellarSdk.Networks.TESTNET;
+		var server = new StellarSdk.Server("https://horizon-testnet.stellar.org");
+		var networkName = StellarSdk.Networks.TESTNET;
 	}
 
 	// console.log('network='+network+' networkName='+networkName)
@@ -182,7 +182,7 @@ function doTrust (network,seckey) {
 	// Transaction will hold a built transaction we can resubmit if the result is unknown.
 	var transaction;
 
-	const StellarToken = new StellarSdk.Asset('FLBS', sourceKeys.publicKey());
+	var StellarToken = new StellarSdk.Asset('FLBS', sourceKeys.publicKey());
 	console.log('StellarToken='+StellarToken);
 
 	server
