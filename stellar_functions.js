@@ -136,9 +136,9 @@ function changeTrust (networkNumber) {
 	const seckey = $("#seckey").val();
 
 	if (networkNumber == 1) {
-		const network = "public"
+		var network = "public"
 	} else {
-		const network = "testnet"
+		var network = "testnet"
 	}
 
 	//console.log("seckey="+seckey);
