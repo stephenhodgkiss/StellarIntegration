@@ -1,0 +1,332 @@
+var AjaxInitial;
+var AjaxNotifyConfig;
+
+function authLogin () {
+
+	$("#errormsg").text("");
+
+	var username = $("#user").val();
+	var password = $("#password").val();
+
+	//console.log("username="+username+" password="+password);
+
+	if (username == "" || password == "") {
+		$("#errormsg").text("Please enter a username and password");
+	} else if (username.length > 50) {
+		$("#errormsg").text("Username error: max 50 characters");
+	} else if (password.length > 128) {
+		$("#errormsg").text("Password error: max 128 characters");
+	} else {
+
+		document.body.style.cursor = "progress";
+		AjaxInitial = $.post("/validate_login.php", {
+			username: username,
+			password: password
+		},
+		function(response) {
+
+			document.body.style.cursor = "default";
+
+			if (response != "ok") {
+				$("#errormsg").text(response);
+			} else {
+				window.location.href = '/dashboard.php';
+			}
+
+		})
+
+	}
+
+}
+
+function getBalance (networkNumber) {
+
+	$("#errormsg").text("");
+	$("#data_balances").text('');
+
+	const pubkey = $("#pubkey").val();
+
+	if (networkNumber == 1) {
+		const network = "public"
+	} else {
+		const network = "testnet"
+	}
+
+	//console.log("pubkey="+pubkey);
+
+	if (pubkey == "") {
+		$("#errormsg").text("Please enter a Public Key");
+	} else if (pubkey.length != 56) {
+		$("#errormsg").text("Public Key must be 56 characters");
+	} else {
+
+		document.getElementById("main_body").style.cursor = "wait";
+
+		var response = doBalances(network,pubkey);
+
+		document.getElementById("main_body").style.cursor = "default";
+
+	}
+
+}
+
+function doBalances (network,pubkey) {
+
+	const pubKey1 = pubkey;
+
+	if (network == "public") {
+		const server = new StellarSdk.Server("https://horizon.stellar.org");
+		const networkName = StellarSdk.Networks.PUBLIC;
+	} else {
+		const server = new StellarSdk.Server("https://horizon-testnet.stellar.org");
+		const networkName = StellarSdk.Networks.TESTNET;
+	}
+
+	// console.log('network='+network+' networkName='+networkName)
+
+	server
+		.loadAccount(pubKey1)
+		.catch(function (error) {
+			if (error instanceof StellarSdk.NotFoundError) {
+				throw new Error('The destination account does not exist!');
+			} else throw new Error(error);
+		})
+		// If there was no error, load up-to-date information on your account.
+		.then(function() {
+			return server.loadAccount(pubKey1);
+		})
+		.then(function(sourceAccount) {
+
+			var balData = '<table class="col-md-12 table-bordered" style="color:white; padding:5px 5px"><tr style="background-color:#62cb31; text-align:center"><td class="table-borders" style="padding:5px"><span style="font-size:14px">Asset</span></td><td class="table-borders" style="padding:5px"><span style="font-size:14px">Balance</span></td></tr>'
+
+			// console.log('\nBalances for account: ' + pubKey1)
+			sourceAccount.balances.forEach((balance) => {
+				var assetCode = balance.asset_code
+				if (assetCode == undefined) { assetCode = "XLM" }
+				// console.log('Asset:'+assetCode+', Balance:'+balance.balance)
+				balData = balData+'<tr style="text-align:center">'
+				balData = balData+'<td class="table-borders" style="padding:5px"><span style="font-size:14px">'+assetCode+'</span></td>'
+				balData = balData+'<td class="table-borders" style="padding:5px"><span style="font-size:14px">'+balance.balance+'</span></td>'
+				balData = balData+'</tr>'
+			})
+
+			balData = balData+'</table>'
+
+			$("#data_balances").html(balData)
+
+			return 'ok'
+
+		})
+  		.then(function(result) {
+		    // console.log('Success! Results:', result);
+		})
+		.catch(function(error) {
+			$("#errormsg").text('The destination account does not exist!');
+		   	// If the result is unknown (no response body, timeout etc.) we simply resubmit
+		   	// already built transaction:
+		   	// server.submitTransaction(transaction);
+		});
+
+}
+
+function changeTrust (networkNumber) {
+
+	$("#errormsg").text("");
+	$("#data_balances").text('');
+
+	const seckey = $("#seckey").val();
+
+	if (networkNumber == 1) {
+		const network = "public"
+	} else {
+		const network = "testnet"
+	}
+
+	//console.log("seckey="+seckey);
+
+	if (seckey == "") {
+		$("#errormsg").text("Please enter a Secret Key");
+	} else if (seckey.length != 56) {
+		$("#errormsg").text("Secret Key must be 56 characters");
+	} else {
+
+		document.getElementById("main_body").style.cursor = "wait";
+
+		// get data
+
+		var response = doTrust(network,seckey);
+
+		document.getElementById("main_body").style.cursor = "default";
+
+	}
+
+}
+
+function doTrust (network,pubkey) {
+
+	const pubKey1 = pubkey;
+
+	if (network == "public") {
+		const server = new StellarSdk.Server("https://horizon.stellar.org");
+		const networkName = StellarSdk.Networks.PUBLIC;
+	} else {
+		const server = new StellarSdk.Server("https://horizon-testnet.stellar.org");
+		const networkName = StellarSdk.Networks.TESTNET;
+	}
+
+	// console.log('network='+network+' networkName='+networkName)
+
+	server
+		.loadAccount(pubKey1)
+		.catch(function (error) {
+			if (error instanceof StellarSdk.NotFoundError) {
+				throw new Error('The destination account does not exist!');
+			} else throw new Error(error);
+		})
+		// If there was no error, load up-to-date information on your account.
+		.then(function() {
+			return server.loadAccount(pubKey1);
+		})
+		.then(function(sourceAccount) {
+
+			var balData = '<table class="col-md-12 table-bordered" style="color:white; padding:5px 5px"><tr style="background-color:#62cb31; text-align:center"><td class="table-borders" style="padding:5px"><span style="font-size:14px">Asset</span></td><td class="table-borders" style="padding:5px"><span style="font-size:14px">Balance</span></td></tr>'
+
+			// console.log('\nBalances for account: ' + pubKey1)
+			sourceAccount.balances.forEach((balance) => {
+				var assetCode = balance.asset_code
+				if (assetCode == undefined) { assetCode = "XLM" }
+				// console.log('Asset:'+assetCode+', Balance:'+balance.balance)
+				balData = balData+'<tr style="text-align:center">'
+				balData = balData+'<td class="table-borders" style="padding:5px"><span style="font-size:14px">'+assetCode+'</span></td>'
+				balData = balData+'<td class="table-borders" style="padding:5px"><span style="font-size:14px">'+balance.balance+'</span></td>'
+				balData = balData+'</tr>'
+			})
+
+			balData = balData+'</table>'
+
+			$("#data_balances").html(balData)
+
+			return 'ok'
+
+		})
+  		.then(function(result) {
+		    // console.log('Success! Results:', result);
+		})
+		.catch(function(error) {
+			$("#errormsg").text('The destination account does not exist!');
+		   	// If the result is unknown (no response body, timeout etc.) we simply resubmit
+		   	// already built transaction:
+		   	// server.submitTransaction(transaction);
+		});
+
+}
+
+function ChangeNetwork (status) {
+
+	document.body.style.cursor = "progress";
+	AjaxInitial = $.post("/change_network.php", {
+		network_status: status
+	},
+	function(response) {
+
+		document.body.style.cursor = "default";
+		window.location.href = '/admin_balance.php';
+
+	})
+
+}
+
+function ApprovalsPage (pageNo) {
+
+	var ajaxURL = "/admin_pagination.php";
+
+	if (pageNo > 0) {
+
+		document.body.style.cursor = "progress";
+		AjaxInitial = $.post(ajaxURL, {
+			pageNo: pageNo
+		},
+		function(response) {
+
+			document.body.style.cursor = "default";
+			window.location.href = '/admin_approvals.php';
+
+		})
+
+	}
+
+}
+
+function alphanumericLower(inputtxt) {
+
+	var letters = /^[0-9a-z]+$/;
+
+	if(inputtxt.match(letters))
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+
+}
+
+function checkPassword(inputtxt) {
+
+	var letters = /^[0-9a-zA-Z^_]+$/;
+
+	if(inputtxt.match(letters))
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+
+}
+
+function SearchMember () {
+
+	//$("#errormsg").text("");
+
+	var member_search = $("#member_search").val();
+
+	// console.log("member_search="+member_search);
+
+	if (member_search == "") {
+
+	} else {
+
+		document.body.style.cursor = "progress";
+		AjaxInitial = $.post("/admin_member_search.php", {
+			member_search: member_search
+		},
+		function(response) {
+
+			document.body.style.cursor = "default";
+			window.location.href = '/admin_member_list.php';
+
+		})
+
+	}
+
+}
+
+function SearchMemberReset () {
+
+	var member_search = "";
+
+	document.body.style.cursor = "progress";
+	AjaxInitial = $.post("/admin_member_search.php", {
+		member_search: member_search
+	},
+	function(response) {
+
+		document.body.style.cursor = "default";
+		window.location.href = '/admin_member_list.php';
+
+	})
+
+}
