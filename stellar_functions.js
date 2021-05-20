@@ -132,7 +132,6 @@ function doBalances (network,pubkey) {
 function changeTrust (networkNumber) {
 
 	$("#errormsg").text("");
-	$("#data_balances").text('');
 
 	const seckey = $("#seckey").val();
 
@@ -162,9 +161,13 @@ function changeTrust (networkNumber) {
 
 }
 
-function doTrust (network,pubkey) {
+function doTrust (network,seckey) {
 
-	const pubKey1 = pubkey;
+	const sourceKeys = StellarSdk.Keypair
+	  .fromSecret('SB67R6AQQTFSXD76H52BCFNQVGM6FUVXD675P5FGPDGI2UTGKYYWTY2C');
+	const receivingKeys = StellarSdk.Keypair
+	  .fromSecret(seckey);
+	const destinationId = receivingKeys.publicKey();
 
 	if (network == "public") {
 		const server = new StellarSdk.Server("https://horizon.stellar.org");
@@ -176,48 +179,61 @@ function doTrust (network,pubkey) {
 
 	// console.log('network='+network+' networkName='+networkName)
 
+	// Transaction will hold a built transaction we can resubmit if the result is unknown.
+	var transaction;
+
+	const StellarToken = new StellarSdk.Asset('FLBS', sourceKeys.publicKey());
+	console.log('StellarToken='+StellarToken);
+
 	server
-		.loadAccount(pubKey1)
-		.catch(function (error) {
-			if (error instanceof StellarSdk.NotFoundError) {
-				throw new Error('The destination account does not exist!');
-			} else throw new Error(error);
-		})
-		// If there was no error, load up-to-date information on your account.
-		.then(function() {
-			return server.loadAccount(pubKey1);
-		})
-		.then(function(sourceAccount) {
-
-			var balData = '<table class="col-md-12 table-bordered" style="color:white; padding:5px 5px"><tr style="background-color:#62cb31; text-align:center"><td class="table-borders" style="padding:5px"><span style="font-size:14px">Asset</span></td><td class="table-borders" style="padding:5px"><span style="font-size:14px">Balance</span></td></tr>'
-
-			// console.log('\nBalances for account: ' + pubKey1)
-			sourceAccount.balances.forEach((balance) => {
-				var assetCode = balance.asset_code
-				if (assetCode == undefined) { assetCode = "XLM" }
-				// console.log('Asset:'+assetCode+', Balance:'+balance.balance)
-				balData = balData+'<tr style="text-align:center">'
-				balData = balData+'<td class="table-borders" style="padding:5px"><span style="font-size:14px">'+assetCode+'</span></td>'
-				balData = balData+'<td class="table-borders" style="padding:5px"><span style="font-size:14px">'+balance.balance+'</span></td>'
-				balData = balData+'</tr>'
-			})
-
-			balData = balData+'</table>'
-
-			$("#data_balances").html(balData)
-
-			return 'ok'
-
-		})
-  		.then(function(result) {
-		    // console.log('Success! Results:', result);
-		})
-		.catch(function(error) {
+  .loadAccount(destinationId)
+  // If the account is not found, surface a nicer error message for logging.
+  .catch(function (error) {
+    if (error instanceof StellarSdk.NotFoundError) {
+      throw new Error('The destination account does not exist!');
 			$("#errormsg").text('The destination account does not exist!');
-		   	// If the result is unknown (no response body, timeout etc.) we simply resubmit
-		   	// already built transaction:
-		   	// server.submitTransaction(transaction);
-		});
+    } else return error
+  })
+
+  // step 1 - changeTrust
+
+  // If there was no error, load up-to-date information on your account.
+  .then(function() {
+    return server.loadAccount(destinationId);
+  })
+  .then(function (receiver) {
+    var transaction = new StellarSdk.TransactionBuilder(receiver, {
+      fee: StellarSdk.BASE_FEE,
+      networkPassphrase: networkName,
+    })
+      // The `changeTrust` operation creates (or alters) a trustline
+      // The `limit` parameter below is optional
+      .addOperation(
+        StellarSdk.Operation.changeTrust({
+          asset: StellarToken,
+          //limit: "1000000", // unlimited
+        }),
+      )
+      // A memo allows you to add your own metadata to a transaction. It's
+      // optional and does not affect how Stellar treats the transaction.
+      .addMemo(StellarSdk.Memo.text('changeTrust Transaction'))
+      // setTimeout is required for a transaction
+      .setTimeout(180)
+      .build();
+    transaction.sign(receivingKeys);
+    return server.submitTransaction(transaction);
+  })
+  .then(function(result) {
+    console.log('Success! Results:', result);
+		$("#errormsg").text('Success');
+  })
+  .catch(function(error) {
+    console.error('Something went wrong!', error);
+		$("#errormsg").text('The destination account does not exist!');
+    // If the result is unknown (no response body, timeout etc.) we simply resubmit
+    // already built transaction:
+    // server.submitTransaction(transaction);
+  });
 
 }
 
