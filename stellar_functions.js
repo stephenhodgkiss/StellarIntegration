@@ -132,7 +132,7 @@ function doBalances (network,pubkey) {
 
 function changeTrust (networkNumber) {
 
-	$("#errormsg").text("Processing.....");
+	$("#errormsg").text("Processing..... please wait");
 
 	var seckey = $("#seckey").val();
 	var issuingAsset = $("#issuingAsset").val();
@@ -170,15 +170,12 @@ function changeTrust (networkNumber) {
 
 function doTrust (network,seckey,issuingAsset,issuingSeckey) {
 
-	console.log("seckey="+seckey);
-	console.log("issuingAsset="+issuingAsset);
-	console.log("issuingSeckey="+issuingSeckey);
-
-	var asset = issuingAsset;
-	var assetSeckey = issuingSeckey;
+	// console.log("seckey="+seckey);
+	// console.log("issuingAsset="+issuingAsset);
+	// console.log("issuingSeckey="+issuingSeckey);
 
 	var sourceKeys = StellarSdk.Keypair
-	  .fromSecret(assetSeckey);
+	  .fromSecret(issuingSeckey);
 	var receivingKeys = StellarSdk.Keypair
 	  .fromSecret(seckey);
 	var destinationId = receivingKeys.publicKey();
@@ -191,13 +188,13 @@ function doTrust (network,seckey,issuingAsset,issuingSeckey) {
 		var networkName = StellarSdk.Networks.TESTNET;
 	}
 
-	console.log('network='+network+' networkName='+networkName)
+	// console.log('network='+network+' networkName='+networkName)
 
 	// Transaction will hold a built transaction we can resubmit if the result is unknown.
 	var transaction;
 
-	const StellarToken = new StellarSdk.Asset(asset, sourceKeys.publicKey());
-	console.log('StellarToken='+StellarToken);
+	const StellarToken = new StellarSdk.Asset(issuingAsset, sourceKeys.publicKey());
+	// console.log('StellarToken='+StellarToken);
 
 	server
   .loadAccount(destinationId)
@@ -253,7 +250,7 @@ function doTrust (network,seckey,issuingAsset,issuingSeckey) {
 
 function makePayment (networkNumber) {
 
-	$("#errormsg").text("Processing.....");
+	$("#errormsg").text("Processing..... please wait");
 
 	var seckey = $("#seckey").val();
 	var pubkey = $("#pubkey").val();
@@ -303,8 +300,8 @@ function doPayment (network,seckey,pubkey,issuingAsset,amount,memo) {
 	const destinationId = pubkey;
 	const tokenAmount = amount;
 
-	console.log('destinationId='+destinationId);
-	console.log('tokenAmount='+tokenAmount);
+	// console.log('destinationId='+destinationId);
+	// console.log('tokenAmount='+tokenAmount);
 
 	if (network == "public") {
 		var server = new StellarSdk.Server("https://horizon.stellar.org");
@@ -368,11 +365,11 @@ function doPayment (network,seckey,pubkey,issuingAsset,amount,memo) {
     return server.submitTransaction(transaction);
   })
   .then(function(result) {
-    console.log('Success! Results:', result);
+    // console.log('Success! Results:', result);
 		$("#errormsg").text('Success');
   })
   .catch(function(error) {
-    console.error('Something went wrong!', error);
+    // console.error('Something went wrong!', error);
 		$("#errormsg").text('The destination account does not exist!');
     // If the result is unknown (no response body, timeout etc.) we simply resubmit
     // already built transaction:
