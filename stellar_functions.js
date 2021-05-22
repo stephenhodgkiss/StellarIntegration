@@ -144,7 +144,9 @@ function changeTrust (networkNumber) {
 		var network = "testnet"
 	}
 
-	//console.log("seckey="+seckey);
+	console.log("seckey="+seckey);
+	console.log("issuingAsset="+issuingAsset);
+	console.log("issuingSeckey="+issuingSeckey);
 
 	if (seckey == "") {
 		$("#errormsg").text("Please enter a Secret Key");
@@ -192,7 +194,7 @@ function doTrust (network,seckey,issuingAsset,issuingSeckey) {
 	var transaction;
 
 	const StellarToken = new StellarSdk.Asset(issuingAsset, sourceKeys.publicKey());
-	// console.log('StellarToken='+StellarToken);
+	console.log('StellarToken='+StellarToken);
 
 	server
   .loadAccount(destinationId)
