@@ -174,8 +174,11 @@ function doTrust (network,seckey,issuingAsset,issuingSeckey) {
 	console.log("issuingAsset="+issuingAsset);
 	console.log("issuingSeckey="+issuingSeckey);
 
+	var asset = issuingAsset;
+	var assetSeckey = issuingSeckey;
+
 	var sourceKeys = StellarSdk.Keypair
-	  .fromSecret(issuingSeckey);
+	  .fromSecret(assetSeckey);
 	var receivingKeys = StellarSdk.Keypair
 	  .fromSecret(seckey);
 	var destinationId = receivingKeys.publicKey();
@@ -193,7 +196,7 @@ function doTrust (network,seckey,issuingAsset,issuingSeckey) {
 	// Transaction will hold a built transaction we can resubmit if the result is unknown.
 	var transaction;
 
-	const StellarToken = new StellarSdk.Asset(issuingAsset, sourceKeys.publicKey());
+	const StellarToken = new StellarSdk.Asset(asset, sourceKeys.publicKey());
 	console.log('StellarToken='+StellarToken);
 
 	server
