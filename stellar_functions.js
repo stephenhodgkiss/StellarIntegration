@@ -254,7 +254,7 @@ function makePayment (networkNumber) {
 
 	var seckey = $("#seckey").val();
 	var pubkey = $("#pubkey").val();
-	var issuingAsset = $("#issuingAsset").val();
+	var asset = $("#asset").val();
 	var amount = $("#amount").val();
 	var memo = $("#memo").val();
 
@@ -274,7 +274,7 @@ function makePayment (networkNumber) {
 		$("#errormsg").text("Please enter a Public Key for the recipient");
 	} else if (pubkey.length != 56) {
 		$("#errormsg").text("Public Key must be 56 characters");
-	} else if (issuingAsset == "") {
+	} else if (asset == "") {
 		$("#errormsg").text("Please enter an Asset Token");
 	} else if (amount == "" || amount <= 0) {
 		$("#errormsg").text("Please enter an amount");
@@ -284,7 +284,7 @@ function makePayment (networkNumber) {
 
 		// get data
 
-		var response = doPayment(network,seckey,pubkey,issuingAsset,amount,memo);
+		var response = doPayment(network,seckey,pubkey,asset,amount,memo);
 
 		document.getElementById("main_body").style.cursor = "default";
 
@@ -292,7 +292,7 @@ function makePayment (networkNumber) {
 
 }
 
-function doPayment (network,seckey,pubkey,issuingAsset,amount,memo) {
+function doPayment (network,seckey,pubkey,asset,amount,memo) {
 
 	var sourceKeys = StellarSdk.Keypair
 	  .fromSecret(seckey);
@@ -320,7 +320,7 @@ function doPayment (network,seckey,pubkey,issuingAsset,amount,memo) {
 	// Transaction will hold a built transaction we can resubmit if the result is unknown.
 	var transaction;
 
-	const StellarToken = new StellarSdk.Asset(issuingAsset, sourceKeys.publicKey());
+	const StellarToken = new StellarSdk.Asset(asset, sourceKeys.publicKey());
 	// console.log('StellarToken='+StellarToken);
 
 	server

@@ -170,8 +170,8 @@ if ($network_status == 0) {
 
 		        	<table class="form-group" style="font-size:16px">
 
-		        		<td for="issuingAsset" style="font-weight:bold; width:200px; text-align:right">Issuing Asset</td>
-						<td style="padding-left:10px"><input id=issuingAsset autofocus="autofocus" type=text class=ftext value="FLBS" placeholder="" class="form-control" style="background-color:#A9D2F6"></td>
+		        		<td for="asset" style="font-weight:bold; width:200px; text-align:right">Asset</td>
+						<td style="padding-left:10px"><input id=asset autofocus="autofocus" type=text class=ftext value="FLBS" placeholder="" class="form-control" style="background-color:#A9D2F6"></td>
 
 					</table>
 
