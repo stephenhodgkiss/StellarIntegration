@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 #error_reporting(E_ALL);
 #ini_set('display_errors', 'On');
@@ -66,7 +66,7 @@ if ($network_status == 0) {
 		  height: 100%;
 		}
 		body {
-		  
+
 		  background: url("/assets/common/images/1.jpg") no-repeat top center #2d494d;
 		}
 		h1, h3, small {
@@ -94,22 +94,22 @@ if ($network_status == 0) {
         <div class="col-md-12">
             <div class="text-center">
 				<h1><?=$SITE_NAME?></h1>
-                
+
 				<h3>Change Trust</h3>
 
             </div>
-			
+
            <div class="row">
 
 				<div class="col-md-3"></div>
-				
+
 				<table class="col-md-6">
 					<tr style="width:100%">
 						<td style="width:30%; padding:10px"><a href="/dashboard.php" class="btn btn-warning btn-block button-margins" style="font-size:16px; text-decoration:underline">ADMIN DASHBOARD</a></td>
 						<td style="width:70%; padding:10px"><a href="/admin_logout.php" class="btn btn-warning btn-block button-margins" style="font-size:16px; text-decoration:underline">IMPORTANT: CLICK TO LOGOUT</a></td>
 					</tr>
 				</table>
-				
+
 				<div class="col-md-3"></div>
 
             </div>
@@ -117,16 +117,16 @@ if ($network_status == 0) {
             <div class="row">
 
 				<div class="col-md-3"></div>
-				
+
 				<table class="col-md-6">
 					<tr style="width:100%">
 						<td class="table-borders" style="padding:5px"><a href=# onclick="ChangeNetwork('0'); return false;" class="button-borders btn btn-block button-margins" style="color:white; background-color:<?=$testnetButtonColor?>; font-size:14px; text-decoration:underline">Testnet</a></td>
 						<td class="table-borders" style="padding:5px"><a href=# onclick="ChangeNetwork('1'); return false;" class="button-borders btn btn-block button-margins" style="color:white; background-color:<?=$publicButtonColor?>; font-size:14px; text-decoration:underline">Public</a></td>
 					</tr>
 				</table>
-				
+
 				<div class="col-md-3"></div>
-				
+
 			</div>
 
 			<div class="row">
@@ -135,7 +135,7 @@ if ($network_status == 0) {
 		        <div class="col-md-6">
 
 					<table class="form-group" style="font-size:16px">
-					
+
 						<td for="seckey" style="font-weight:bold; width:200px; text-align:right">Receiver's Secret Key</td>
 						<td style="padding-left:10px"><input id=seckey autofocus="autofocus" type=text class=ftext value="" placeholder="" class="form-control" size="60" style="background-color:#A9D2F6"></td>
 
@@ -146,7 +146,40 @@ if ($network_status == 0) {
 				<div class="col-md-3"></div>
 
 			</div>
+			<div class="row">
 
+		        <div class="col-md-3"></div>
+		        <div class="col-md-6">
+
+					<table class="form-group" style="font-size:16px">
+
+						<td for="issuingAsset" style="font-weight:bold; width:200px; text-align:right">Issuing Asset</td>
+						<td style="padding-left:10px"><input id=issuingAsset autofocus="autofocus" type=text class=ftext value="FLBS" placeholder="" class="form-control" size="60" style="background-color:#A9D2F6"></td>
+
+					</table>
+
+				</div>
+
+				<div class="col-md-3"></div>
+
+			</div>
+			<div class="row">
+
+		        <div class="col-md-3"></div>
+		        <div class="col-md-6">
+
+					<table class="form-group" style="font-size:16px">
+
+						<td for="issuingSeckey" style="font-weight:bold; width:200px; text-align:right">Issuing Secret Key</td>
+						<td style="padding-left:10px"><input id=issuingSeckey autofocus="autofocus" type=text class=ftext value="" placeholder="" class="form-control" size="60" style="background-color:#A9D2F6"></td>
+
+					</table>
+
+				</div>
+
+				<div class="col-md-3"></div>
+
+			</div>
 			<div class="row">
 
 		        <div class="col-md-3"></div>
@@ -155,7 +188,7 @@ if ($network_status == 0) {
 		        	<table class="form-group" style="font-size:16px">
 
 						<td style="padding-left:10px"><a href=# onclick="changeTrust('<?=$network_status?>'); return false;" class="btn btn-success btn-block" style="font-size:16px">Submit</a></td>
-						
+
 					</table>
 
 		        </div>
@@ -183,7 +216,7 @@ if ($network_status == 0) {
 				<div class="col-md-6" id="data_balances" style="text-align:center; color:white">&nbsp;</div>
 
 				</table>
-				
+
 				<div class="col-md-3"></div>
 
             </div>
@@ -213,13 +246,13 @@ if ($network_status == 0) {
 <!-- App scripts -->
 <script src="/assets/common/scripts/homer.js"></script>
 
-<?php 
+<?php
 include("admin_footer.php");
 ?>
 
 </body>
 </html>
 
-<?php 
+<?php
 $mysqli2->close();
 ?>

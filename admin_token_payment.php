@@ -170,6 +170,23 @@ if ($network_status == 0) {
 
 		        	<table class="form-group" style="font-size:16px">
 
+		        		<td for="issuingAsset" style="font-weight:bold; width:200px; text-align:right">Issuing Asset</td>
+						<td style="padding-left:10px"><input id=issuingAsset autofocus="autofocus" type=text class=ftext value="FLBS" placeholder="" class="form-control" style="background-color:#A9D2F6"></td>
+
+					</table>
+
+				</div>
+
+				<div class="col-md-3"></div>
+
+			</div>
+			<div class="row">
+
+		        <div class="col-md-3"></div>
+		        <div class="col-md-6">
+
+		        	<table class="form-group" style="font-size:16px">
+
 		        		<td for="amount" style="font-weight:bold; width:200px; text-align:right">Amount of Tokens</td>
 						<td style="padding-left:10px"><input id=amount autofocus="autofocus" type=text class=ftext value="" placeholder="" class="form-control" style="background-color:#A9D2F6"></td>
 
@@ -191,7 +208,7 @@ if ($network_status == 0) {
 						<td style="padding-left:10px"><input id=memo autofocus="autofocus" type=text class=ftext value="" placeholder="" class="form-control" style="background-color:#A9D2F6"></td>
 
 					</table>
-	
+
 				</div>
 
 				<div class="col-md-3"></div>

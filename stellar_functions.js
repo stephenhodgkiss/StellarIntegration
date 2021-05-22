@@ -135,6 +135,8 @@ function changeTrust (networkNumber) {
 	$("#errormsg").text("Processing.....");
 
 	var seckey = $("#seckey").val();
+	var issuingAsset = $("#issuingAsset").val();
+	var issuingSeckey = $("#issuingSeckey").val();
 
 	if (networkNumber == 1) {
 		var network = "public"
@@ -148,13 +150,19 @@ function changeTrust (networkNumber) {
 		$("#errormsg").text("Please enter a Secret Key");
 	} else if (seckey.length != 56) {
 		$("#errormsg").text("Secret Key must be 56 characters");
+	} else if (issuingSeckey == "") {
+		$("#errormsg").text("Please enter the Issuing Secret Key");
+	} else if (issuingSeckey.length != 56) {
+		$("#errormsg").text("Issuing Secret Key must be 56 characters");
+	} else if (issuingAsset == "") {
+		$("#errormsg").text("Please enter the Issuing Asset");
 	} else {
 
 		document.getElementById("main_body").style.cursor = "wait";
 
 		// get data
 
-		var response = doTrust(network,seckey);
+		var response = doTrust(network,seckey,issuingAsset,issuingSeckey);
 
 		document.getElementById("main_body").style.cursor = "default";
 
@@ -162,10 +170,10 @@ function changeTrust (networkNumber) {
 
 }
 
-function doTrust (network,seckey) {
+function doTrust (network,seckey,issuingAsset,issuingSeckey) {
 
 	var sourceKeys = StellarSdk.Keypair
-	  .fromSecret('SB67R6AQQTFSXD76H52BCFNQVGM6FUVXD675P5FGPDGI2UTGKYYWTY2C');
+	  .fromSecret(issuingSeckey);
 	var receivingKeys = StellarSdk.Keypair
 	  .fromSecret(seckey);
 	var destinationId = receivingKeys.publicKey();
@@ -183,7 +191,7 @@ function doTrust (network,seckey) {
 	// Transaction will hold a built transaction we can resubmit if the result is unknown.
 	var transaction;
 
-	const StellarToken = new StellarSdk.Asset('FLBS', sourceKeys.publicKey());
+	const StellarToken = new StellarSdk.Asset(issuingAsset, sourceKeys.publicKey());
 	// console.log('StellarToken='+StellarToken);
 
 	server
@@ -244,6 +252,7 @@ function makePayment (networkNumber) {
 
 	var seckey = $("#seckey").val();
 	var pubkey = $("#pubkey").val();
+	var issuingAsset = $("#issuingAsset").val();
 	var amount = $("#amount").val();
 	var memo = $("#memo").val();
 
@@ -263,6 +272,8 @@ function makePayment (networkNumber) {
 		$("#errormsg").text("Please enter a Public Key for the recipient");
 	} else if (pubkey.length != 56) {
 		$("#errormsg").text("Public Key must be 56 characters");
+	} else if (issuingAsset == "") {
+		$("#errormsg").text("Please enter an Asset Token");
 	} else if (amount == "" || amount <= 0) {
 		$("#errormsg").text("Please enter an amount");
 	} else {
@@ -271,7 +282,7 @@ function makePayment (networkNumber) {
 
 		// get data
 
-		var response = doPayment(network,seckey,pubkey,amount,memo);
+		var response = doPayment(network,seckey,pubkey,issuingAsset,amount,memo);
 
 		document.getElementById("main_body").style.cursor = "default";
 
@@ -279,7 +290,7 @@ function makePayment (networkNumber) {
 
 }
 
-function doPayment (network,seckey,pubkey,amount,memo) {
+function doPayment (network,seckey,pubkey,issuingAsset,amount,memo) {
 
 	var sourceKeys = StellarSdk.Keypair
 	  .fromSecret(seckey);
@@ -307,7 +318,7 @@ function doPayment (network,seckey,pubkey,amount,memo) {
 	// Transaction will hold a built transaction we can resubmit if the result is unknown.
 	var transaction;
 
-	const StellarToken = new StellarSdk.Asset('FLBS', sourceKeys.publicKey());
+	const StellarToken = new StellarSdk.Asset(issuingAsset, sourceKeys.publicKey());
 	// console.log('StellarToken='+StellarToken);
 
 	server
