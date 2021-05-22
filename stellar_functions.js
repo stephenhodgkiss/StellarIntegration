@@ -316,6 +316,7 @@ function doPayment (network,seckey,pubkey,amount,memo) {
   .catch(function (error) {
     if (error instanceof StellarSdk.NotFoundError) {
       throw new Error('The destination account does not exist!');
+			$("#errormsg").text('The destination account does not exist!');
     } else return error
   })
 
@@ -352,9 +353,11 @@ function doPayment (network,seckey,pubkey,amount,memo) {
   })
   .then(function(result) {
     console.log('Success! Results:', result);
+		$("#errormsg").text('Success');
   })
   .catch(function(error) {
     console.error('Something went wrong!', error);
+		$("#errormsg").text('The destination account does not exist!');
     // If the result is unknown (no response body, timeout etc.) we simply resubmit
     // already built transaction:
     // server.submitTransaction(transaction);
