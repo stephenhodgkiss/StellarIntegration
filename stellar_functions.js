@@ -144,10 +144,6 @@ function changeTrust (networkNumber) {
 		var network = "testnet"
 	}
 
-	console.log("seckey="+seckey);
-	console.log("issuingAsset="+issuingAsset);
-	console.log("issuingSeckey="+issuingSeckey);
-
 	if (seckey == "") {
 		$("#errormsg").text("Please enter a Secret Key");
 	} else if (seckey.length != 56) {
@@ -174,6 +170,10 @@ function changeTrust (networkNumber) {
 
 function doTrust (network,seckey,issuingAsset,issuingSeckey) {
 
+	console.log("seckey="+seckey);
+	console.log("issuingAsset="+issuingAsset);
+	console.log("issuingSeckey="+issuingSeckey);
+
 	var sourceKeys = StellarSdk.Keypair
 	  .fromSecret(issuingSeckey);
 	var receivingKeys = StellarSdk.Keypair
@@ -188,7 +188,7 @@ function doTrust (network,seckey,issuingAsset,issuingSeckey) {
 		var networkName = StellarSdk.Networks.TESTNET;
 	}
 
-	// console.log('network='+network+' networkName='+networkName)
+	console.log('network='+network+' networkName='+networkName)
 
 	// Transaction will hold a built transaction we can resubmit if the result is unknown.
 	var transaction;
